@@ -1,0 +1,30 @@
+{
+  "name": "vinimay",
+  "version": "1.0.0",
+  "description": "an online platform for selling and buying books",
+  "main": "app.js",
+  "scripts": {
+    "client-install": "npm install --prefix client",
+    "start": "node app.js",
+    "server": "env-cmd -f ./config/dev.env nodemon app.js -e js,css",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "hlo": "/Users/91989/priyanshu/mongodb/bin/mongod.exe --dbpath=/Users/91989/priyanshu/mongodb-data"
+  },
+  "author": "Priyanshu Dangi",
+  "license": "ISC",
+  "dependencies": {
+    "@sendgrid/mail": "^7.2.1",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.20",
+    "multer": "^1.4.2",
+    "sharp": "^0.25.4"
+  },
+  "devDependencies": {
+    "concurrently": "^5.2.0",
+    "env-cmd": "^10.1.0",
+    "nodemon": "^2.0.4"
+  }
+}
