@@ -112,17 +112,22 @@ router.delete("/delete/:id", auth, async (req, res) => {
 });
 
 /**
- * @route   GET api/product/readAll
+ * @route   GET api/product/readAll?limit=12&skip=0
  * @desc    Update Product
  * @access  Must be logged in
  */
 router.get("/readAll", auth, async (req, res) => {
   try {
-    const products = await Product.find().lean();
+    const products = await Product.find()
+      .limit(parseInt(req.query.limit))
+      .skip(parseInt(req.query.skip))
+      .lean();
     if (!products) {
       throw new Error("No Product Found");
     }
-    res.json({ products });
+    const productsCount = await Product.countDocuments();
+    const totalPage = Math.ceil(productsCount / parseInt(req.query.limit));
+    res.json({ products, totalPage });
   } catch (err) {
     res.status(400).send({ error: "Unable To Fetch The Products" });
     console.log(err);
