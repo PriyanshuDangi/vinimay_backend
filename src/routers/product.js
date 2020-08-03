@@ -11,20 +11,31 @@ const router = new express.Router();
  * @desc    Create Product
  * @access  Private
  */
-router.post("/create", auth, uploads.single("image1"), async (req, res) => {
-  try {
-    const product = new Product({
-      ...req.body,
-      image: req.file.buffer,
-      owner: req.user._id,
-    });
-    await product.save();
-    res.send({ product });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-    console.log(err);
+router.post(
+  "/create",
+  auth,
+  uploads.fields([
+    { name: "image1", maxCount: 1 },
+    { name: "image2", maxCount: 1 },
+    { name: "image3", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    try {
+      const product = new Product({
+        ...req.body,
+        image: req.files["image1"][0].buffer,
+        image2: req.files["image2"] ? req.files["image2"][0].buffer : null,
+        image3: req.files["image3"] ? req.files["image3"][0].buffer : null,
+        owner: req.user._id,
+      });
+      await product.save();
+      res.send({ product });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+      console.log(err);
+    }
   }
-});
+);
 
 /**
  * @route   GET api/product/read/:id
@@ -50,42 +61,57 @@ router.get("/read/:id", auth, async (req, res) => {
  * @desc    Update Product
  * @access  Private
  */
-router.post("/update/:id", auth, uploads.single("image1"), async (req, res) => {
-  try {
-    // const product = await Product.findById(req.params.id);
-    //have to use this one after authentication is added
-    const product = await Product.findOne({
-      _id: req.params.id,
-      owner: req.user._id,
-    });
-    if (!product) {
-      throw new Error("No such product exist");
+router.post(
+  "/update/:id",
+  auth,
+  uploads.fields([
+    { name: "image1", maxCount: 1 },
+    { name: "image2", maxCount: 1 },
+    { name: "image3", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    try {
+      const product = await Product.findOne({
+        _id: req.params.id,
+        owner: req.user._id,
+      });
+      if (!product) {
+        throw new Error("No such product exist");
+      }
+      const updates = Object.keys(req.body);
+      const allowedUpdates = [
+        "category",
+        "title",
+        "description",
+        "price",
+        "image",
+      ];
+      const isValid = updates.filter((update) => {
+        return allowedUpdates.includes(update);
+      });
+      if (!isValid) {
+        throw new Error("Please provide valid data!");
+      }
+      isValid.forEach((update) => {
+        product[update] = req.body[update];
+      });
+      if (req.files["image1"]) {
+        product.image = req.files["image1"][0].buffer;
+      }
+      if (req.files["image2"]) {
+        product.image2 = req.files["image2"][0].buffer;
+      }
+      if (req.files["image3"]) {
+        product.image3 = req.files["image3"][0].buffer;
+      }
+      await product.save();
+      res.json({ product });
+    } catch (err) {
+      console.log(err);
+      res.status(401).json({ error: err.message });
     }
-    const updates = Object.keys(req.body);
-    const allowedUpdates = [
-      "category",
-      "title",
-      "description",
-      "price",
-      "image",
-    ];
-    const isValid = updates.filter((update) => {
-      return allowedUpdates.includes(update);
-    });
-    if (!isValid) {
-      throw new Error("Please provide valid data!");
-    }
-    isValid.forEach((update) => {
-      product[update] = req.body[update];
-    });
-    product.image = req.file.buffer;
-    await product.save();
-    res.json({ product });
-  } catch (err) {
-    console.log(err);
-    res.status(401).json({ error: err.message });
   }
-});
+);
 
 /**
  * @route   Delete api/product/delete/:id

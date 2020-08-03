@@ -36,6 +36,12 @@ const productSchema = new mongoose.Schema(
       type: Buffer,
       required: true,
     },
+    image2: {
+      type: Buffer,
+    },
+    image3: {
+      type: Buffer,
+    },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

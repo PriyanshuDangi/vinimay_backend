@@ -30,6 +30,13 @@ const userSchema = new mongoose.Schema({
     minlength: 4,
     maxlength: 4,
   },
+  chatWith: [
+    {
+      name: String,
+      id: mongoose.Schema.Types.ObjectId,
+      channelId: mongoose.Schema.Types.ObjectId,
+    },
+  ],
   tokens: [
     {
       token: {
