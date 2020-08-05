@@ -1,6 +1,7 @@
 const express = require("express");
 const http = require("http");
 const socketio = require("socket.io");
+const path = require("path");
 
 require("./src/db/mongoose");
 const app = express();
@@ -19,6 +20,14 @@ app.use("/api/chat", chatRouter);
 
 const socket = require("./src/utils/chat/io");
 socket(io);
+
+//serve static assets
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+  app.use("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
 
 const port = process.env.PORT || 2000;
 server.listen(port, () => {
