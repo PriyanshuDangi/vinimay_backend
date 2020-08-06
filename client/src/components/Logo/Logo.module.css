@@ -1,0 +1,14 @@
+.Logo {
+  /* padding: 8px; */
+  margin: auto;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.Logo img {
+  height: 100%;
+}
+.Logo a {
+  text-decoration: none;
+  color: inherit;
+}

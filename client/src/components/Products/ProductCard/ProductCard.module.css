@@ -1,0 +1,39 @@
+.ProductCard {
+  margin-top: 20px;
+  box-sizing: border-box;
+}
+
+.ProductCard a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.Card {
+  height: 300px;
+}
+
+.Card:hover {
+  /* box-shadow: 4px 4px 20px 0 #ccc; */
+  cursor: pointer;
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.Image {
+  height: 70%;
+  text-align: center;
+  background-color: #eee;
+}
+
+.Card img {
+  width: auto;
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.CardBody {
+  padding: 5px 1.25rem;
+}
+
+.CardBody h4 {
+  margin-bottom: 5px;
+}

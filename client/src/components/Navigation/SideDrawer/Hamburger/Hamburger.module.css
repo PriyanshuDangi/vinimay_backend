@@ -1,0 +1,31 @@
+.Hamburger {
+  width: 30px;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-around;
+  align-items: center;
+  box-sizing: border-box;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.Hamburger div {
+  width: 90%;
+  margin: 4px 0;
+  height: 4px;
+  background-color: white;
+}
+
+@media (max-width: 800px) and (min-width: 576px) {
+  .Hamburger {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}
+
+@media (max-width: 575px) {
+  .Hamburger {
+    margin-left: 10px;
+  }
+}

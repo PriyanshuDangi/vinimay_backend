@@ -24,10 +24,10 @@ module.exports = function socketEvents(io) {
         }
         // userId = details.userId;
         socket.join(details.room);
-        socket.emit(
-          "message",
-          sendMessageWithDetails("welcome!", details.userId)
-        );
+        // socket.emit(
+        //   "message",
+        //   sendMessageWithDetails("welcome!", details.userId)
+        // );
         callback();
       } catch (err) {
         console.log(err);
@@ -46,8 +46,19 @@ module.exports = function socketEvents(io) {
           userName: details.username,
           userID: details.userId,
         });
+        let channel = await Channel.findById(details.room);
+        let index = channel.between.findIndex((element) => {
+          return String(element.id) === String(details.userId);
+        });
+        channel.between[index].newMessagesRecieved =
+          channel.between[index].newMessagesRecieved + 1;
+        channel.lastMessage = message;
+        channel.lastSendBy = details.userId;
         await newMessage.save();
-        console.log(newMessage);
+        await channel.save();
+        // console.log(channel.between);
+        console.log(channel);
+        // console.log(newMessage);
         callback();
       } catch (err) {
         console.log(err);

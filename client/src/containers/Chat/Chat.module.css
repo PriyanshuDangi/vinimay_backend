@@ -1,0 +1,56 @@
+.Container {
+  margin: auto;
+  /* height: 90vh; */
+}
+.Container img {
+  max-width: 100%;
+}
+.Message {
+  display: flex;
+  height: calc(100vh - 64px);
+  /* height: 100%; */
+}
+.Inbox_Box {
+  /* height: 100%; */
+  background: #f8f8f8 none repeat scroll 0 0;
+  overflow: hidden;
+  width: 40%;
+  border-right: 1px solid #c4c4c4;
+  display: flex;
+  flex-direction: column;
+}
+.Message_Box {
+  width: 60%;
+  background: white none repeat scroll 0 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 5px;
+}
+.Message_Empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding-bottom: 40px;
+}
+.No_Messages {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
+.No_Messages div {
+  font-weight: bolder;
+  font-size: 24px;
+}
+.Message_Empty b {
+  font-size: large;
+}
+@media (max-width: 575px) {
+  .Message {
+    height: calc(100vh - 100px);
+  }
+}

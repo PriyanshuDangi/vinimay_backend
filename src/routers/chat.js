@@ -17,24 +17,32 @@ router.post("/channel/create", auth, async (req, res) => {
     if (!seller) {
       throw new Error("Unable To Find Seller");
     }
-    let channelId;
-    let alreadyChatting = req.user.chatWith.every((element) => {
-      if (String(element.id) == String(seller._id)) {
-        channelId = element.channelId;
-      }
-      return String(element.id) === String(seller._id);
-    });
-    if (req.user.chatWith.length === 0) {
-      alreadyChatting = false;
-    }
-    console.log(alreadyChatting);
-    if (alreadyChatting) {
-      let channel = await Channel.findById(channelId).lean();
-      return res.json({ channel });
-    }
+    // let channelAlreadyExists = await Channel.find({
+    //   "between.id": req.user._id,
+    //   "between.id": req.body.sellerId,
+    // });
+    // if (channelAlreadyExists.length !== 0) {
+    //   console.log("already exists");
+    //   return res.json({ channel: channelAlreadyExists[0] });
+    // }
+
+    // let channelId;
+    // let alreadyChatting = req.user.chatWith.find((element) => {
+    //   if (String(element.id) === String(seller._id)) {
+    //     channelId = element.channelId;
+    //   }
+    //   return String(element.id) === String(seller._id);
+    // });
+    // if (req.user.chatWith.length === 0) {
+    //   alreadyChatting = false;
+    // }
+    // if (alreadyChatting) {
+    //   let channel = await Channel.findById(channelId).lean();
+    //   return res.json({ channel });
+    // }
     let channel = new Channel({
-      owner1: req.user._id, //the one who want to buy
-      owner2: seller._id, //the one who is selling
+      // owner1: req.user._id, //the one who want to buy
+      // owner2: seller._id, //the one who is selling
       between: [
         {
           id: req.user._id,
@@ -46,19 +54,19 @@ router.post("/channel/create", auth, async (req, res) => {
         },
       ],
     });
-    seller.chatWith.push({
-      name: req.user.name,
-      id: req.user._id,
-      channelId: channel._id,
-    });
-    req.user.chatWith.push({
-      name: seller.name,
-      id: seller._id,
-      channelId: channel._id,
-    });
+    // seller.chatWith.unshift({
+    //   name: req.user.name,
+    //   id: req.user._id,
+    //   channelId: channel._id,
+    // });
+    // req.user.chatWith.unshift({
+    //   name: seller.name,
+    //   id: seller._id,
+    //   channelId: channel._id,
+    // });
     await channel.save();
-    await req.user.save();
-    await seller.save();
+    // await req.user.save();
+    // await seller.save();
     res.json({ channel });
   } catch (err) {
     console.log(err);
@@ -68,7 +76,24 @@ router.post("/channel/create", auth, async (req, res) => {
 
 router.get("/peoples/get", auth, async (req, res) => {
   try {
-    const peoples = req.user.chatWith;
+    // const peoples = req.user.chatWith;
+    // res.json({ peoples });
+    const peoplesArray = await Channel.find({
+      "between.id": req.user._id,
+    }).sort({ updatedAt: -1 });
+    let peoples = peoplesArray.map((people) => {
+      let index = people.between.findIndex((element) => {
+        return String(element.id) !== String(req.user._id);
+      });
+      return {
+        channelId: people._id,
+        id: people.between[index].id,
+        name: people.between[index].name,
+        newMessagesRecieved: people.between[index].newMessagesRecieved,
+        lastMessage: people.lastMessage,
+        time: people.updatedAt,
+      };
+    });
     res.json({ peoples });
   } catch (err) {
     console.log(err);
@@ -77,18 +102,42 @@ router.get("/peoples/get", auth, async (req, res) => {
 
 router.post("/getChat", auth, async (req, res) => {
   try {
-    console.log(req.body);
     const messages = await Message.find({ channelID: req.body.channelId })
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 })
       .lean();
     const a = messages.map((message) => {
       return {
         userId: message.userID,
         message: message.text,
+        time: message.updatedAt,
       };
     });
-    console.log(a);
     res.json({ messages: a });
+    let channel = await Channel.findById(req.body.channelId);
+    let index = channel.between.findIndex((element) => {
+      return String(element.id) !== String(req.user._id);
+    });
+    channel.between[index].newMessagesRecieved = 0;
+    await channel.save();
+    console.log(channel.between);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+router.get("totalNewMessage/Count", auth, async (req, res) => {
+  try {
+    const peoplesArray = await Channel.find({ "between.id": req.user._id });
+    let count = 0;
+    peoplesArray.forEach((people) => {
+      let index = people.between.findIndex((element) => {
+        return String(element.id) !== String(req.user._id);
+      });
+      if (people.between[index].newMessageCount > 0) {
+        count++;
+      }
+    });
+    res.json({ count });
   } catch (err) {
     console.log(err);
   }

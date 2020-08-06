@@ -1,0 +1,58 @@
+.Toolbar {
+  color: white;
+  height: 64px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #343a40;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+  z-index: 90;
+}
+
+.Toolbar nav {
+  height: 100%;
+}
+
+.Toolbar .Logo {
+  height: 80%;
+  margin-right: 10px;
+}
+
+.NavbarLeft {
+  display: flex;
+}
+
+.SearchBottom {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .Toolbar {
+    padding: 0;
+  }
+}
+
+@media (max-width: 575px) {
+  .SearchTop {
+    display: none;
+  }
+  .SearchBottom {
+    top: 64px;
+    position: fixed;
+    display: block;
+    z-index: 90;
+    width: 100%;
+  }
+  .SearchBottom form {
+    margin: 0 !important;
+  }
+  .SearchBottom form input {
+    box-sizing: border-box;
+    height: 36px;
+  }
+}

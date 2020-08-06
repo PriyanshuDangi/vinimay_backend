@@ -1,0 +1,16 @@
+.NavigationItems {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  height: 100%;
+}
+
+.Sell {
+  padding: 4px 10px;
+  color: #ffffff;
+  background-color: #2a65ea;
+  border-radius: 10px;
+}

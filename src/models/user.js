@@ -2,50 +2,55 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const userSchema = new mongoose.Schema({
-  webmail: {
-    type: String,
-    trim: true,
-    required: [true, "webmail is required"],
-    unique: true,
-    lowercase: true,
-    validate: {
-      validator: (value) => /^\d{9}@nitt.edu/.test(value),
-      message: () => "please enter valid webmail",
-    },
-  },
-  password: {
-    type: String,
-    trim: true,
-    required: [true, "password is required"],
-    minlength: 7,
-  },
-  name: {
-    type: String,
-    trim: true,
-    required: [true, "name is required"],
-  },
-  otp: {
-    type: Number,
-    minlength: 4,
-    maxlength: 4,
-  },
-  chatWith: [
-    {
-      name: String,
-      id: mongoose.Schema.Types.ObjectId,
-      channelId: mongoose.Schema.Types.ObjectId,
-    },
-  ],
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true,
+const userSchema = new mongoose.Schema(
+  {
+    webmail: {
+      type: String,
+      trim: true,
+      required: [true, "webmail is required"],
+      unique: true,
+      lowercase: true,
+      validate: {
+        validator: (value) => /^\d{9}@nitt.edu/.test(value),
+        message: () => "please enter valid webmail",
       },
     },
-  ],
-});
+    password: {
+      type: String,
+      trim: true,
+      required: [true, "password is required"],
+      minlength: 7,
+    },
+    name: {
+      type: String,
+      trim: true,
+      required: [true, "name is required"],
+    },
+    otp: {
+      type: Number,
+      minlength: 4,
+      maxlength: 4,
+    },
+    chatWith: [
+      {
+        name: String,
+        id: mongoose.Schema.Types.ObjectId,
+        channelId: mongoose.Schema.Types.ObjectId,
+      },
+    ],
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
 userSchema.virtual("products", {
   ref: "product",

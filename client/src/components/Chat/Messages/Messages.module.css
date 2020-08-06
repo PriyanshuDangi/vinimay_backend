@@ -1,0 +1,33 @@
+.Message_History {
+  /* height: 450px; */
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 5px;
+  padding-left: 20px;
+}
+.Messages_Heading {
+  padding: 5px 29px 10px 20px;
+  overflow: hidden;
+  border-bottom: 1px solid #117a8b;
+}
+.GoBack {
+  float: left;
+  margin-right: 20px;
+  font-size: 20px;
+  cursor: pointer;
+}
+.Name_Heading h4 {
+  color: #05728f;
+  font-size: 21px;
+  margin: auto;
+  height: 36px;
+  padding-top: 4px;
+}
+.People_Img {
+  float: left;
+  width: 36px;
+  margin-right: 10px;
+}
+.People_Img img {
+  border-radius: 50%;
+}

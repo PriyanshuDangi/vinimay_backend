@@ -1,0 +1,52 @@
+.People_List {
+  border-bottom: 1px solid #c4c4c4;
+  margin: 0;
+  padding: 18px 16px 10px;
+  cursor: pointer;
+}
+.Active_List {
+  background: #d6caca;
+}
+.People_Info {
+  overflow: hidden;
+  clear: both;
+  display: flex;
+}
+.People_Img {
+  float: left;
+  width: 36px;
+}
+.People_Img img {
+  border-radius: 50%;
+}
+.People_Ib {
+  float: left;
+  padding: 0 0 0 15px;
+  flex-grow: 1;
+  /* width: 88%; */
+}
+.People_Ib h5 {
+  font-size: 15px;
+  color: #464646;
+  margin: 0 0 8px 0;
+}
+.People_Ib h5 span {
+  font-size: 13px;
+  float: right;
+}
+.People_Ib p {
+  font-size: 14px;
+  color: #989898;
+  margin: auto;
+}
+/* .Last_Message {
+  display: flex;
+} */
+.Last_Message span {
+  float: right;
+  font-size: 13px;
+  border-radius: 50%;
+  background-color: #03527b;
+  color: white;
+  padding: 0 6px;
+}
