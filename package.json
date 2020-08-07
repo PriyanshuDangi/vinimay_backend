@@ -9,8 +9,7 @@
     "server": "env-cmd -f ./config/dev.env nodemon app.js -e js,css",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "hlo": "/Users/91989/priyanshu/mongodb/bin/mongod.exe --dbpath=/Users/91989/priyanshu/mongodb-data",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd client && npm install && npm run build "
+    "hlo": "/Users/91989/priyanshu/mongodb/bin/mongod.exe --dbpath=/Users/91989/priyanshu/mongodb-data"
   },
   "author": "Priyanshu Dangi",
   "license": "ISC",

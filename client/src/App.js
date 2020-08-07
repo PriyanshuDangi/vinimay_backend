@@ -17,6 +17,7 @@ import Product from "./containers/Product/Product";
 import MyProducts from "./containers/MyProducts/MyProducts";
 import Chat from "./containers/Chat/Chat";
 import ContactUs from "./components/ContactUs/ContactUs";
+import Search from "./containers/Search/Search";
 
 class App extends Component {
   componentDidMount = () => {
@@ -25,12 +26,21 @@ class App extends Component {
   render() {
     let routes = (
       <Switch>
+        {/* <Route path="/otp" component={Otp} /> */}
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/" component={Login} />
-        {/* <Route path="/otp" component={Otp} /> */}
+        <Redirect to="/" />
       </Switch>
     );
+    if (this.props.doVerify) {
+      routes = (
+        <Switch>
+          <Route path="/" component={Otp} />
+          <Redirect to="/" />
+        </Switch>
+      );
+    }
     if (this.props.isAuth) {
       routes = (
         <Layout>
@@ -39,6 +49,7 @@ class App extends Component {
             <Route path="/post" component={PostProduct} />
             <Route path="/product/:id" component={Product} />
             {/* <Route path="/notification" component={Products} /> */}
+            <Route path="/search" component={Search} />
             <Route path="/myproducts" component={MyProducts} />
             <Route path="/chat" component={Chat} />
             <Route path="/contactus" component={ContactUs} />
@@ -61,6 +72,7 @@ class App extends Component {
 const mapStateToProps = (state) => {
   return {
     isAuth: state.auth.token !== null,
+    doVerify: state.auth.doVerify,
   };
 };
 

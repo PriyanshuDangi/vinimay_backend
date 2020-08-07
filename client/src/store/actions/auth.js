@@ -11,9 +11,16 @@ export const logout = () => {
   };
 };
 
-export const authActionStart = () => {
+export const authActionStart = (webmail) => {
   return {
     type: actionTypes.AUTH_START,
+    webmail,
+  };
+};
+
+export const authOtpStart = () => {
+  return {
+    type: actionTypes.AUTH_OTP_START,
   };
 };
 
@@ -32,15 +39,27 @@ export const authFail = (error, errorStatus) => {
   };
 };
 
-export const authLogin = (webmail, password) => {
+export const getVerified = () => {
+  return {
+    type: actionTypes.GET_VERIFIED,
+  };
+};
+
+export const cancelVerification = () => {
+  return {
+    type: actionTypes.CANCEL_VERIFICATION,
+  };
+};
+
+export const authOtp = (webmail, otp) => {
   return (dispatch) => {
-    dispatch(authActionStart());
-    const authData = {
+    dispatch(authOtpStart(webmail));
+    const data = {
       webmail,
-      password,
+      otp,
     };
     axios
-      .post("/api/user/login", authData)
+      .post("/api/user/checkOTP", data)
       .then((response) => {
         console.log(response);
         localStorage.setItem("token", response.data.token);
@@ -58,9 +77,40 @@ export const authLogin = (webmail, password) => {
   };
 };
 
+export const authLogin = (webmail, password) => {
+  return (dispatch) => {
+    dispatch(authActionStart(webmail));
+    const authData = {
+      webmail,
+      password,
+    };
+    axios
+      .post("/api/user/login", authData)
+      .then((response) => {
+        console.log(response);
+        if (response.data.verified) {
+          dispatch(getVerified());
+        } else {
+          console.log(response);
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("_id", response.data.user._id);
+          localStorage.setItem("webmail", response.data.user.webmail);
+          localStorage.setItem("name", response.data.user.name);
+          console.log(response.data);
+          dispatch(authSuccess(response.data));
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        dispatch(authFail(error.response.data.error, error.response.status));
+        console.log(error.response);
+      });
+  };
+};
+
 export const authSignup = (webmail, password, name) => {
   return (dispatch) => {
-    dispatch(authActionStart());
+    dispatch(authActionStart(webmail));
     const authData = {
       webmail,
       password,
@@ -69,13 +119,14 @@ export const authSignup = (webmail, password, name) => {
     axios
       .post("/api/user/signup", authData)
       .then((response) => {
-        console.log(response);
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("_id", response.data.user._id);
-        localStorage.setItem("webmail", response.data.user.webmail);
-        localStorage.setItem("name", response.data.user.name);
-        console.log(response.data);
-        dispatch(authSuccess(response.data));
+        // console.log(response);
+        // localStorage.setItem("token", response.data.token);
+        // localStorage.setItem("_id", response.data.user._id);
+        // localStorage.setItem("webmail", response.data.user.webmail);
+        // localStorage.setItem("name", response.data.user.name);
+        // console.log(response.data);
+        // dispatch(authSuccess(response.data));
+        dispatch(getVerified());
       })
       .catch((error) => {
         console.log(error);

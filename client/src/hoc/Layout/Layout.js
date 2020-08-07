@@ -2,10 +2,25 @@ import React, { Component } from "react";
 import styleClasses from "./Layout.module.css";
 import Navbar from "../../components/Navigation/Navbar/Navbar";
 import SideDrawer from "../../components/Navigation/SideDrawer/SideDrawer";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
 
-export default class Layout extends Component {
+class Layout extends Component {
   state = {
     showSideDrawer: false,
+    searchInput: "",
+  };
+  inputChangeHandler = (event) => {
+    this.setState({
+      searchInput: event.target.value,
+    });
+    console.log(event.target.value);
+  };
+  onSearch = (event) => {
+    event.preventDefault();
+    if (this.state.searchInput !== "") {
+      this.props.history.replace("/search?string=" + this.state.searchInput);
+    }
   };
   sideDrawerToggle = () => {
     this.setState((prevState) => {
@@ -15,7 +30,12 @@ export default class Layout extends Component {
   render() {
     return (
       <div>
-        <Navbar hamburger={this.sideDrawerToggle} />
+        <Navbar
+          hamburger={this.sideDrawerToggle}
+          onSearchInputChange={this.inputChangeHandler}
+          searchInput={this.state.searchInput}
+          onSearch={this.onSearch}
+        />
         <SideDrawer
           open={this.state.showSideDrawer}
           closed={this.sideDrawerToggle}
@@ -25,3 +45,5 @@ export default class Layout extends Component {
     );
   }
 }
+
+export default withRouter(connect()(Layout));

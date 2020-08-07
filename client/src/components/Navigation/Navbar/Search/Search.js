@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function Search() {
+export default function Search(props) {
   return (
     <div>
-      <form className="form-inline my-2 my-lg-0">
+      <form className="form-inline my-2 my-lg-0" onSubmit={props.onSearch}>
         <div className="input-group flex-nowrap">
           <input
             type="text"
@@ -11,6 +11,8 @@ export default function Search() {
             placeholder="Search Product"
             aria-label="Username"
             aria-describedby="addon-wrapping"
+            onChange={props.onSearchInputChange}
+            value={props.searchInput}
           />
           <div className="input-group-prepend">
             <button

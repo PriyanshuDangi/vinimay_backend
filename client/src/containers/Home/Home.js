@@ -165,6 +165,14 @@ class Home extends Component {
         </React.Fragment>
       );
     }
+    if (this.state.products.length === 0) {
+      products = (
+        <div className={styleClasses.No_Product}>
+          <p>Sorry, no product found.</p>
+          <p>Please try again.</p>
+        </div>
+      );
+    }
     if (this.state.loading) {
       products = <Spinner />;
     }

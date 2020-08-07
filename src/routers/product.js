@@ -31,7 +31,11 @@ router.post(
       await product.save();
       res.send({ product });
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      if (err.message) {
+        res.status(400).json({ error: err.message });
+      } else {
+        res.status(500).send({ error: "unable to create the product" });
+      }
       console.log(err);
     }
   }
@@ -178,6 +182,27 @@ router.get("/myproducts", auth, async (req, res) => {
   }
 });
 
-//request to buy a product
-
+/**
+ * @route   Get api/product/search?string=physics
+ * @desc    My Products
+ * @access  Private
+ */
+router.get("/search", auth, async (req, res) => {
+  try {
+    var allProducts = await Product.find().lean();
+    let products;
+    if (req.query.string === undefined) {
+      products = allProducts;
+    } else {
+      products = allProducts.filter((product) => {
+        const regex = new RegExp(`^${req.query.string}`, "gi");
+        return product.title.match(regex);
+      });
+    }
+    const totalPage = Math.ceil(products.length / 12);
+    res.json({ products, totalPage });
+  } catch (err) {
+    console.log(err);
+  }
+});
 module.exports = router;

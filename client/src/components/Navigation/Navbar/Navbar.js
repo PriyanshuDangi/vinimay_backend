@@ -15,7 +15,11 @@ export default function Navbar(props) {
             <Logo />
           </div>
           <div className={styleClasses.SearchTop}>
-            <Search />
+            <Search
+              onSearchInputChange={props.onSearchInputChange}
+              searchInput={props.searchInput}
+              onSearch={props.onSearch}
+            />
           </div>
         </div>
         <nav>

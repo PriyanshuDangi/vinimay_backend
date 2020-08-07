@@ -31,6 +31,10 @@ const userSchema = new mongoose.Schema(
       minlength: 4,
       maxlength: 4,
     },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
     chatWith: [
       {
         name: String,

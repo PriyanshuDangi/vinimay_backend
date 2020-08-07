@@ -8,10 +8,38 @@ const intialState = {
   loading: false,
   error: null,
   errorStatus: null,
+  doVerify: false,
 };
 
 const reducer = (state = intialState, action) => {
   switch (action.type) {
+    case actionTypes.AUTH_OTP_START:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+        errorStatus: null,
+      };
+    case actionTypes.GET_VERIFIED:
+      return {
+        ...state,
+        error: null,
+        errorStatus: null,
+        doVerify: true,
+        loading: false,
+      };
+    case actionTypes.CANCEL_VERIFICATION:
+      return {
+        ...state,
+        name: null,
+        webmail: null,
+        token: null,
+        userId: null,
+        loading: false,
+        error: null,
+        errorStatus: null,
+        doVerify: false,
+      };
     case actionTypes.AUTH_LOGOUT:
       return {
         ...state,
@@ -22,13 +50,16 @@ const reducer = (state = intialState, action) => {
         loading: false,
         error: null,
         errorStatus: null,
+        doVerify: false,
       };
     case actionTypes.AUTH_START:
       return {
         ...state,
+        webmail: action.webmail,
         loading: true,
         error: null,
         errorStatus: null,
+        doVerify: false,
       };
     case actionTypes.AUTH_SUCCESS:
       const updatedState = {
@@ -40,6 +71,7 @@ const reducer = (state = intialState, action) => {
         webmail: action.data.user.webmail,
         token: action.data.token,
         userId: action.data.user._id,
+        doVerify: false,
       };
       return updatedState;
     case actionTypes.AUTH_FAIL:
@@ -49,6 +81,7 @@ const reducer = (state = intialState, action) => {
         errorStatus: action.errorStatus,
         loading: false,
       };
+
     default:
       return state;
   }

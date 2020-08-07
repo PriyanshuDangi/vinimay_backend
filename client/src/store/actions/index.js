@@ -1,1 +1,8 @@
-export { authLogin, authSignup, authCheckState, logout } from "./auth";
+export {
+  authLogin,
+  authSignup,
+  authCheckState,
+  logout,
+  authOtp,
+  cancelVerification,
+} from "./auth";

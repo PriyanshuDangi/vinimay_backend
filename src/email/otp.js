@@ -9,8 +9,8 @@ const sendOTP = async (email, otp) => {
       to: email,
       from: "smartgenius098@gmail.com",
       subject: `VINIMAY : Verify your webmail address`,
-      text: `Welcome to the VINIMAY app. Your otp for signing in is ${otp} .`,
-      html: `Welcome to the VINIMAY app. Your otp for signing in is <b>${otp}</b> . Please don't share it with anyone. `,
+      text: `Welcome to the VINIMAY app. Your otp for verification is ${otp} .`,
+      html: `Welcome to the VINIMAY app. Your otp for verification is <b>${otp}</b> . Please don't share it with anyone. `,
     };
     // sgMail.send(msg);
     const m = await sgMail.send(msg);
