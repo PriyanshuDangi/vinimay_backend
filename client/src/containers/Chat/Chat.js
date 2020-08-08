@@ -126,6 +126,12 @@ class Chat extends Component {
   };
 
   render() {
+    let inboxClassName = [styleClasses.Inbox_Box];
+    let messageBoxClassName = [styleClasses.Message_Box, styleClasses.Hide];
+    if (this.state.room) {
+      inboxClassName.push(styleClasses.Hide);
+      messageBoxClassName.pop();
+    }
     return (
       <React.Fragment>
         <div className={styleClasses.Container}>
@@ -138,14 +144,14 @@ class Chat extends Component {
             </div>
           ) : (
             <div className={styleClasses.Message}>
-              <div className={styleClasses.Inbox_Box}>
+              <div className={inboxClassName.join(" ")}>
                 <Inbox
                   changeChannel={this.changeChannel}
                   peoples={this.state.peoples}
                   room={this.state.room}
                 />
               </div>
-              <div className={styleClasses.Message_Box}>
+              <div className={messageBoxClassName.join(" ")}>
                 {this.state.room ? (
                   <Messages
                     userId={this.props.userId}

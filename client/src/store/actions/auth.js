@@ -146,7 +146,7 @@ export const authCheckState = () => {
       const webmail = localStorage.getItem("webmail");
       const name = localStorage.getItem("name");
       if (_id || webmail || name) {
-        const data = {
+        let data = {
           token,
           user: {
             _id,
@@ -155,6 +155,25 @@ export const authCheckState = () => {
           },
         };
         dispatch(authSuccess(data));
+        axios
+          .get("/api/user/checkToken", {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          })
+          .then((response) => {
+            localStorage.setItem("_id", response.data.user._id);
+            localStorage.setItem("webmail", response.data.user.webmail);
+            localStorage.setItem("name", response.data.user.name);
+            data = {
+              token,
+              user: { ...response.data.user },
+            };
+            dispatch(authSuccess(data));
+          })
+          .catch(() => {
+            dispatch(logout());
+          });
       } else {
         dispatch(logout());
       }

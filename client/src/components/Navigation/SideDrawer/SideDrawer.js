@@ -22,9 +22,9 @@ function SideDrawer(props) {
               <i className="fa fa-home" aria-hidden="true"></i>{" "}
               <span>Home</span>
             </NavigationItem>
-            <NavigationItem link="/myaccount" exact sideDrawer>
+            <NavigationItem link="/myprofile" exact sideDrawer>
               <i className="fa fa-user-circle-o" aria-hidden="true"></i>{" "}
-              <span>My Account</span>
+              <span>My Profile</span>
             </NavigationItem>
             <NavigationItem link="/myproducts" exact sideDrawer>
               <i className="fa fa-shopping-cart" aria-hidden="true"></i>{" "}

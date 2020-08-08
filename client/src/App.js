@@ -18,9 +18,11 @@ import MyProducts from "./containers/MyProducts/MyProducts";
 import Chat from "./containers/Chat/Chat";
 import ContactUs from "./components/ContactUs/ContactUs";
 import Search from "./containers/Search/Search";
+import MyProfile from "./containers/MyProfile/MyProfile";
 
 class App extends Component {
   componentDidMount = () => {
+    console.log("!!!!!");
     this.props.onAuthCheckState();
   };
   render() {
@@ -49,6 +51,7 @@ class App extends Component {
             <Route path="/post" component={PostProduct} />
             <Route path="/product/:id" component={Product} />
             {/* <Route path="/notification" component={Products} /> */}
+            <Route path="/myprofile" component={MyProfile} />
             <Route path="/search" component={Search} />
             <Route path="/myproducts" component={MyProducts} />
             <Route path="/chat" component={Chat} />

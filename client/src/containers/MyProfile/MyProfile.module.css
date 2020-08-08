@@ -1,0 +1,16 @@
+.MyProfile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  height: 80vh;
+}
+.Container {
+  width: 300px;
+}
+.Details > div {
+  font-weight: bold;
+  padding: 5px 10px;
+  display: flex;
+  justify-content: space-between;
+}

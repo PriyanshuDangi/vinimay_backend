@@ -9,9 +9,27 @@
 }
 .Outgoing_Message {
   overflow: hidden;
-  margin: 26px 0 26px;
+  padding-right: 10px;
+  margin: 6px 10px 6px;
 }
 .Outgoing_Message div {
   float: right;
   width: 46%;
+  position: relative;
+}
+.Outgoing_Message div::after {
+  border-width: 0px 0 10px 10px;
+  border-color: transparent transparent transparent #05728f;
+  top: 0;
+  right: -9px;
+  content: " ";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+.timeDate {
+  color: #747474;
+  display: block;
+  font-size: 12px;
 }

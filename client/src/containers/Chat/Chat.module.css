@@ -53,4 +53,16 @@
   .Message {
     height: calc(100vh - 100px);
   }
+  .Inbox_Box {
+    width: 100%;
+  }
+  .Message_Box {
+    width: 100%;
+  }
+  .Show {
+    display: flex;
+  }
+  .Hide {
+    display: none;
+  }
 }
