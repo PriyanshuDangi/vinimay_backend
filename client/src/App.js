@@ -4,7 +4,6 @@ import "bootstrap/dist/js/bootstrap";
 import "font-awesome/css/font-awesome.min.css";
 import Layout from "./hoc/Layout/Layout";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import Products from "./components/Products/Products";
 import Home from "./containers/Home/Home";
 import Login from "./containers/Auth/Login/Login";
 import Signup from "./containers/Auth/Signup/Signup";
@@ -22,13 +21,11 @@ import MyProfile from "./containers/MyProfile/MyProfile";
 
 class App extends Component {
   componentDidMount = () => {
-    console.log("!!!!!");
     this.props.onAuthCheckState();
   };
   render() {
     let routes = (
       <Switch>
-        {/* <Route path="/otp" component={Otp} /> */}
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/" component={Login} />
@@ -50,7 +47,6 @@ class App extends Component {
             <Route path="/logout" component={Logout} />
             <Route path="/post" component={PostProduct} />
             <Route path="/product/:id" component={Product} />
-            {/* <Route path="/notification" component={Products} /> */}
             <Route path="/myprofile" component={MyProfile} />
             <Route path="/search" component={Search} />
             <Route path="/myproducts" component={MyProducts} />
@@ -63,12 +59,7 @@ class App extends Component {
       );
     }
 
-    return (
-      <BrowserRouter>
-        {/* <Layout>{routes}</Layout> */}
-        {routes}
-      </BrowserRouter>
-    );
+    return <BrowserRouter>{routes}</BrowserRouter>;
   }
 }
 

@@ -12,8 +12,6 @@ const composeEnhancers =
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     : null || compose;
 
-// const composeEnhancers = compose;
-
 const rootReducer = combineReducers({
   auth: authReducer,
 });

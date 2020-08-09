@@ -1,5 +1,5 @@
-const Product = require("../models/product");
 const express = require("express");
+const Product = require("../models/product");
 const auth = require("../middleware/auth");
 const multer = require("multer");
 const uploads = multer({});
@@ -29,14 +29,13 @@ router.post(
         owner: req.user._id,
       });
       await product.save();
-      res.send({ product });
+      res.status(201).send({ product });
     } catch (err) {
-      if (err.message) {
-        res.status(400).json({ error: err.message });
-      } else {
-        res.status(500).send({ error: "unable to create the product" });
-      }
       console.log(err);
+      if (err.message) {
+        return res.status(400).json({ error: err.message });
+      }
+      res.status(500).send({ error: "unable to create the product" });
     }
   }
 );
@@ -52,7 +51,7 @@ router.get("/read/:id", auth, async (req, res) => {
     if (!product) {
       throw new Error("Product not found");
     }
-    let isOwner = req.user._id.toString() == product.owner.toString();
+    let isOwner = String(req.user._id) === String(product.owner);
     res.status(200).json({ product, isOwner });
   } catch (err) {
     res.status(400).json({ error: "unable to get the product" });
@@ -61,7 +60,7 @@ router.get("/read/:id", auth, async (req, res) => {
 });
 
 /**
- * @route   POST api/product/read/:id
+ * @route   POST api/product/update/:id
  * @desc    Update Product
  * @access  Private
  */
@@ -89,6 +88,8 @@ router.post(
         "description",
         "price",
         "image",
+        "image2",
+        "image3",
       ];
       const isValid = updates.filter((update) => {
         return allowedUpdates.includes(update);
@@ -112,7 +113,7 @@ router.post(
       res.json({ product });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ error: err.message });
+      res.status(400).json({ error: err.message });
     }
   }
 );
@@ -124,7 +125,6 @@ router.post(
  */
 router.delete("/delete/:id", auth, async (req, res) => {
   try {
-    // const product = await Product.findById(req.params.id);
     const product = await Product.findOne({
       _id: req.params.id,
       owner: req.user._id,
@@ -132,7 +132,6 @@ router.delete("/delete/:id", auth, async (req, res) => {
     if (!product) {
       throw new Error("unable to delete the requested product");
     }
-    // await setTimeout(() => {}, 10000);
     product.remove();
     res.json({ msg: "product removed successfully!" });
   } catch (err) {
@@ -143,7 +142,7 @@ router.delete("/delete/:id", auth, async (req, res) => {
 
 /**
  * @route   GET api/product/readAll?limit=12&skip=0
- * @desc    Update Product
+ * @desc    To get all the products
  * @access  Must be logged in
  */
 router.get("/readAll", auth, async (req, res) => {
@@ -166,7 +165,7 @@ router.get("/readAll", auth, async (req, res) => {
 
 /**
  * @route   GET api/product/myproducts
- * @desc    My Products
+ * @desc    TO get all my Products
  * @access  Private
  */
 router.get("/myproducts", auth, async (req, res) => {
@@ -205,4 +204,5 @@ router.get("/search", auth, async (req, res) => {
     console.log(err);
   }
 });
+
 module.exports = router;

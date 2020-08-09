@@ -88,7 +88,7 @@ export const authLogin = (webmail, password) => {
       .post("/api/user/login", authData)
       .then((response) => {
         console.log(response);
-        if (response.data.verified) {
+        if (response.data.doVerify) {
           dispatch(getVerified());
         } else {
           console.log(response);

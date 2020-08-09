@@ -6,7 +6,7 @@ import userImg from "../../../assets/images/user.jpg";
 
 export default function Messages(props) {
   const messages = props.messages.map((message, index) => {
-    if (message.userId == props.userId) {
+    if (String(message.userId) === String(props.userId)) {
       return (
         <OutgoingMessage
           message={message.message}
@@ -24,7 +24,7 @@ export default function Messages(props) {
       );
     }
   });
-  console.log(messages);
+  // console.log(messages);
   return (
     <React.Fragment>
       <div className={styleClasses.Messages_Heading}>
@@ -36,7 +36,7 @@ export default function Messages(props) {
         <div className={styleClasses.Name_Heading}>
           <div className={styleClasses.People_Img}>
             {" "}
-            <img src={userImg} />{" "}
+            <img src={userImg} alt={props.currentName} />{" "}
           </div>
           <h4>{props.currentName}</h4>
         </div>

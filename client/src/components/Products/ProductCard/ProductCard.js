@@ -1,10 +1,6 @@
 import React from "react";
 import styleClasses from "./ProductCard.module.css";
-import productImg from "../../../assets/images/product.jpg";
-import olxImg from "../../../assets/images/olx.PNG";
 import { NavLink } from "react-router-dom";
-
-// style={{ width: "18rem" }}
 
 export default function ProductCard(props) {
   const imageSrc = "data:image/jpg;base64," + props.product.image;

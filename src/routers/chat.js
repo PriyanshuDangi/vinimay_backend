@@ -3,6 +3,7 @@ const Message = require("../models/message");
 const User = require("../models/user");
 const express = require("express");
 const auth = require("../middleware/auth");
+const { response } = require("express");
 
 const router = new express.Router();
 
@@ -41,8 +42,6 @@ router.post("/channel/create", auth, async (req, res) => {
     //   return res.json({ channel });
     // }
     let channel = new Channel({
-      // owner1: req.user._id, //the one who want to buy
-      // owner2: seller._id, //the one who is selling
       between: [
         {
           id: req.user._id,
@@ -70,10 +69,15 @@ router.post("/channel/create", auth, async (req, res) => {
     res.json({ channel });
   } catch (err) {
     console.log(err);
-    res.status(400).send("unable to create the channel");
+    res.status(400).json({ error: "unable to create the channel" });
   }
 });
 
+/**
+ * @route   GET api/chat/peoples/get
+ * @desc    Get all the peoples inbox
+ * @access  Private
+ */
 router.get("/peoples/get", auth, async (req, res) => {
   try {
     // const peoples = req.user.chatWith;
@@ -97,12 +101,27 @@ router.get("/peoples/get", auth, async (req, res) => {
     res.json({ peoples });
   } catch (err) {
     console.log(err);
+    res.status(500).send({ error: "unable to fetch the inbox" });
   }
 });
 
+/**
+ * @route   POST api/chat/getChat
+ * @desc    Get all the messages
+ * @access  Private
+ */
 router.post("/getChat", auth, async (req, res) => {
   try {
-    const messages = await Message.find({ channelID: req.body.channelId })
+    const channel = await Channel.findOne({
+      _id: req.body.channelId,
+      "between.id": req.user._id,
+    });
+    if (!channel) {
+      throw new Error("No such channel exists");
+    }
+    const messages = await Message.find({
+      channelID: req.body.channelId,
+    })
       .sort({ createdAt: 1 })
       .lean();
     const a = messages.map((message) => {
@@ -113,19 +132,27 @@ router.post("/getChat", auth, async (req, res) => {
       };
     });
     res.json({ messages: a });
-    let channel = await Channel.findById(req.body.channelId);
+    // let channel = await Channel.findById(req.body.channelId);
     let index = channel.between.findIndex((element) => {
       return String(element.id) !== String(req.user._id);
     });
     channel.between[index].newMessagesRecieved = 0;
     await channel.save();
-    console.log(channel.between);
   } catch (err) {
     console.log(err);
+    if (err.message) {
+      return res.status(400).send({ error: err.message });
+    }
+    res.status(500).send({ error: "unable to load the older messages" });
   }
 });
 
-router.get("totalNewMessage/Count", auth, async (req, res) => {
+/**
+ * @route   GET api/chat/totalNewMessage/count
+ * @desc
+ * @access  Private
+ */
+router.get("totalNewMessage/count", auth, async (req, res) => {
   try {
     const peoplesArray = await Channel.find({ "between.id": req.user._id });
     let count = 0;
@@ -142,4 +169,5 @@ router.get("totalNewMessage/Count", auth, async (req, res) => {
     console.log(err);
   }
 });
+
 module.exports = router;

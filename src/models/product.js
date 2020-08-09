@@ -13,11 +13,11 @@ const productSchema = new mongoose.Schema(
     price: {
       type: Number,
       required: true,
-      //   validate(value) {
-      //     if (value < 0) {
-      //       throw new Error("price must be positive");
-      //     }
-      //   },
+      // validate(value) {
+      //   if (value < 0) {
+      //     throw new Error("price must be positive");
+      //   }
+      // },
       validate: {
         validator: (value) => value >= 0,
         message: () => "price must be positive",
@@ -26,13 +26,14 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      validate: {
-        validator: (value) =>
-          ["books", "cycles", "eg stuff", "miscellanous"].includes(value),
-        message: (props) => props.value + " is not a defined category",
-      },
+      // validate: {
+      //   validator: (value) =>
+      //     ["books", "cycles", "eg stuff", "miscellanous"].includes(value),
+      //   message: (props) => props.value + " is not a defined category",
+      // },
     },
     image: {
+      //the main image
       type: Buffer,
       required: true,
     },

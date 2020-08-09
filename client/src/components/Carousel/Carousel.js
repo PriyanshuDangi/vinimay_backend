@@ -1,5 +1,4 @@
 import React from "react";
-import olxImage from "../../assets/images/olx.PNG";
 
 // export default function Jumbotron() {
 //   return (

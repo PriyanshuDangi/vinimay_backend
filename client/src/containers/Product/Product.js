@@ -18,7 +18,7 @@ class Product extends Component {
     showUpdate: false,
     deleteLoading: false, //loading for deleting the product
     deleted: false,
-    chatLoading: true,
+    chatLoading: false,
   };
 
   componentDidMount = () => {
@@ -29,7 +29,7 @@ class Product extends Component {
         },
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         this.setState({
           product: response.data.product,
           isOwner: response.data.isOwner,
@@ -38,7 +38,7 @@ class Product extends Component {
         });
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
         this.setState({
           loading: false,
           error: error.response.data.error,
@@ -119,6 +119,9 @@ class Product extends Component {
   };
 
   chatWithSeller = () => {
+    this.setState({
+      chatLoading: true,
+    });
     axios
       .post(
         "/api/chat/channel/create/",
@@ -132,7 +135,7 @@ class Product extends Component {
         }
       )
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         // this.props.history.push("/chat?cid=" + response.data.channel._id);
         this.props.history.push({
           pathname: "/chat",
@@ -140,8 +143,18 @@ class Product extends Component {
         });
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
+        this.setState({
+          chatLoading: false,
+          error: error.response.data.error,
+        });
       });
+  };
+
+  removeAlert = () => {
+    this.setState({
+      error: null,
+    });
   };
 
   render() {
@@ -152,15 +165,22 @@ class Product extends Component {
     if (this.state.product.title) {
       let sellerDetails = (
         <div className={styleClasses.ProductSeller}>
-          <h3>Seller Details</h3>
+          <h3>Seller</h3>
+          {/* <h3>Seller Details</h3>
           <b>{this.state.product.owner}</b>
-          <p>Owner Webmail</p>
-          <button
-            type="button"
-            className="btn btn-primary btn-block"
-            onClick={this.chatWithSeller}>
-            Chat With Seller
-          </button>
+          <p>Owner Webmail</p> */}
+          {this.state.chatLoading ? (
+            <button style={{ textAlign: "center", border: "0", width: "100%" }}>
+              <i className="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="btn btn-primary btn-block"
+              onClick={this.chatWithSeller}>
+              Chat With Seller
+            </button>
+          )}
         </div>
       );
       if (this.state.isOwner) {
@@ -317,11 +337,26 @@ class Product extends Component {
           product={this.state.product}
           update
           updateComplete={this.toggleUpdate}
+          goBack={this.toggleUpdate}
         />
+      );
+    }
+    let error;
+    if (this.state.error) {
+      error = (
+        <div className={styleClasses.Alert}>
+          <div className="alert alert-warning text-center" role="alert">
+            {this.state.error}
+            <button type="button" onClick={this.removeAlert}>
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
       );
     }
     return (
       <div className={styleClasses.Main}>
+        {error}
         {modal}
         {content}
       </div>

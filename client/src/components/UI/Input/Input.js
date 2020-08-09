@@ -21,7 +21,6 @@ function Input(props) {
         <input
           className="form-control"
           {...props.elementConfig}
-          className="form-control"
           id={props.name}
           name={props.name}
           value={props.value}
@@ -43,9 +42,8 @@ function Input(props) {
     case "select":
       input = (
         <select
-          className="custom-select"
+          className="custom-select form-control"
           required={props.elementConfig.required}
-          className="form-control"
           id={props.name}
           name={props.name}
           value={props.value}
@@ -64,7 +62,6 @@ function Input(props) {
         <input
           className="form-control"
           {...props.elementConfig}
-          className="form-control"
           id={props.name}
           name={props.name}
           value={props.value}

@@ -1,6 +1,6 @@
-const User = require("../models/user");
 const express = require("express");
-
+const User = require("../models/user");
+const auth = require("../middleware/auth");
 const sendOTP = require("../email/otp");
 
 const router = new express.Router();
@@ -49,7 +49,7 @@ router.post("/signup", async (req, res) => {
         .send({ error: "Account already exist! Please Login" });
     }
 
-    res.status(401).json({ error: "Unable to create account" });
+    res.status(400).json({ error: "Unable to create account" });
   }
 });
 
@@ -64,12 +64,6 @@ router.post("/login", async (req, res) => {
       req.body.webmail,
       req.body.password
     );
-    // if (user.otp) {
-    //   user.otp = Math.round(Math.random() * 9000 + 1000);
-    //   await user.save();
-    //   //   sendOTP(user.webmail, user.otp);
-    //   res.status(201).json({ doVerify: true });
-    // }
     if (!user) {
       throw new Error("User not found!");
     }
@@ -78,7 +72,7 @@ router.post("/login", async (req, res) => {
       sendOTP(user.webmail, user.otp);
       await user.save();
       return res.status(200).json({
-        verified: true,
+        doVerify: true,
       });
     }
     const token = await user.genrateAuthToken();
@@ -92,7 +86,7 @@ router.post("/login", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    res.status(401).json({ error: err.message });
+    res.status(400).json({ error: err.message });
   }
 });
 
@@ -142,10 +136,10 @@ router.post("/regenrateOTP", async (req, res) => {
   try {
     const user = await User.findOne({ webmail: req.body.webmail });
     if (!user) {
-      return res.send("user does not exist");
+      throw new Error("user does not exist");
     }
     if (!user.otp) {
-      return res.send("otp not needed");
+      throw new Error("otp verification not needed");
     }
     user.otp = Math.round(Math.random() * 9000 + 1000);
     sendOTP(user.webmail, user.otp);
@@ -153,8 +147,49 @@ router.post("/regenrateOTP", async (req, res) => {
     res.status(200).send({ message: "otp is sent to the registered webmail" });
   } catch (err) {
     console.log(err);
-    res.status(401).json({ error: "sorry unable to send " });
+    if (err.message) {
+      return res.status(400).send({ error: err.message });
+    }
+    res.status(500).json({ error: "sorry unable to send the otp again" });
   }
+});
+
+/**
+ * @route   POST api/user/changePassword
+ * @desc    Change Password
+ * @access  Private
+ */
+router.post("/changePassword", auth, async (req, res) => {
+  try {
+    const user = await User.findByCredentials(
+      req.body.webmail,
+      req.body.oldPassword
+    );
+    if (!user) {
+      throw new Error("webmail and oldPassword doesn't match");
+    }
+    user.password = req.body.newPassword;
+    await user.save();
+    res.status(200).json({ message: "password successfully changed" });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ error: err.message });
+  }
+});
+
+/**
+ * @route   GET api/user/checkToken
+ * @desc    For checking the token on automatically logging in
+ * @access  Private
+ */
+router.get("/checkToken", auth, (req, res) => {
+  res.status(200).send({
+    user: {
+      _id: req.user._id,
+      name: req.user.name,
+      webmail: req.user.webmail,
+    },
+  });
 });
 
 module.exports = router;

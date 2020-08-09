@@ -1,6 +1,6 @@
 import React from "react";
 import styleClasses from "./IncomingMessage.module.css";
-import userImg from "../../../../../assets/images/user.jpg";
+// import userImg from "../../../../../assets/images/user.jpg";
 import moment from "moment";
 
 export default function IncomingMessage(props) {

@@ -1,9 +1,6 @@
 const Channel = require("../../models/channel");
 const Message = require("../../models/message");
 
-// let currentChannel;
-// let userId;
-
 function sendMessageWithDetails(message, userId) {
   return {
     message,
@@ -57,7 +54,7 @@ module.exports = function socketEvents(io) {
         await newMessage.save();
         await channel.save();
         // console.log(channel.between);
-        console.log(channel);
+        // console.log(channel);
         // console.log(newMessage);
         callback();
       } catch (err) {

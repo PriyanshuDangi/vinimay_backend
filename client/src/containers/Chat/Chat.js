@@ -22,7 +22,7 @@ class Chat extends Component {
       this.setState((prevState) => {
         return { messages: prevState.messages.concat(message) };
       });
-      console.log(message);
+      // console.log(message);
     });
     if (this.props.location.state && this.props.location.state.channelId) {
       let room = this.props.location.state.channelId;
@@ -38,14 +38,14 @@ class Chat extends Component {
         },
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         this.setState({
           peoples: response.data.peoples,
           peoplesLoaded: true,
         });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -79,7 +79,7 @@ class Chat extends Component {
         }
       )
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         this.setState((prevState) => {
           return {
             messages: response.data.messages.concat(prevState.messages),
@@ -87,7 +87,7 @@ class Chat extends Component {
         });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -113,7 +113,7 @@ class Chat extends Component {
   };
 
   changeChannel = (channelId, name) => {
-    console.log(channelId);
+    // console.log(channelId);
     this.setState({
       room: channelId,
       currentName: name,

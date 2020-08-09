@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import Logo from "../../../components/Logo/Logo";
 import Spinner from "../../../components/UI/Spinner/Spinner";
 import axios from "axios";
-import { setTimeout } from "@sendgrid/mail";
 
 class Otp extends Component {
   state = {

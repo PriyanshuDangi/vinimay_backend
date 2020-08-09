@@ -4,12 +4,11 @@
   "description": "an online platform for selling and buying books",
   "main": "app.js",
   "scripts": {
-    "client-install": "npm install --prefix client",
     "start": "node app.js",
     "server": "env-cmd -f ./config/dev.env nodemon app.js -e js,css",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "hlo": "/Users/91989/priyanshu/mongodb/bin/mongod.exe --dbpath=/Users/91989/priyanshu/mongodb-data"
+    "node-modules-install": "npm install && npm install --prefix client"
   },
   "author": "Priyanshu Dangi",
   "license": "ISC",

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Carousel from "../../components/Carousel/Carousel";
 import Products from "../../components/Products/Products";
 import styleClasses from "./Search.module.css";
 import axios from "axios";

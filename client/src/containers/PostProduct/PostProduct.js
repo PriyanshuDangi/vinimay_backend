@@ -94,12 +94,10 @@ class PostProduct extends Component {
       let controls = {
         ...this.state.controls,
       };
-      var a = this.props;
-      console.log(this.props.product);
+      // console.log(this.props.product);
       for (const [key, value] of Object.entries(controls)) {
         controls[key].value = this.props.product[key];
       }
-      console.log(controls);
       this.setState({
         controls,
       });
@@ -147,8 +145,8 @@ class PostProduct extends Component {
         },
       })
       .then((response) => {
-        console.log("success");
-        console.log(response.data);
+        // console.log("success");
+        // console.log(response.data);
         this.setState({
           loading: false,
           error: null,
@@ -167,6 +165,12 @@ class PostProduct extends Component {
           error: error.response.data.error,
         });
       });
+  };
+
+  removeError = () => {
+    this.setState({
+      error: null,
+    });
   };
 
   render() {
@@ -195,6 +199,12 @@ class PostProduct extends Component {
       error = (
         <div className="alert alert-warning text-center" role="alert">
           {this.state.error}
+          <button
+            type="button"
+            className={styleClasses.CloseError}
+            onClick={this.removeError}>
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
       );
     }
@@ -203,27 +213,34 @@ class PostProduct extends Component {
     let image3 = <p>Image3</p>;
     if (this.state.controls.image1.file) {
       image1 = (
-        <img src={URL.createObjectURL(this.state.controls.image1.file)} />
+        <img
+          src={URL.createObjectURL(this.state.controls.image1.file)}
+          alt=""
+        />
       );
     } else if (this.props.product && this.props.product.image) {
       let src = "data:image/jpg;base64," + this.props.product.image;
-      image1 = <img src={src} />;
+      image1 = <img src={src} alt="" />;
     }
     if (this.state.controls.image2.file) {
       image2 = (
-        <img src={URL.createObjectURL(this.state.controls.image2.file)}></img>
+        <img
+          src={URL.createObjectURL(this.state.controls.image2.file)}
+          alt=""></img>
       );
     } else if (this.props.product && this.props.product.image2) {
       let src = "data:image/jpg;base64," + this.props.product.image2;
-      image2 = <img src={src} />;
+      image2 = <img src={src} alt="" />;
     }
     if (this.state.controls.image3.file) {
       image3 = (
-        <img src={URL.createObjectURL(this.state.controls.image3.file)}></img>
+        <img
+          src={URL.createObjectURL(this.state.controls.image3.file)}
+          alt=""></img>
       );
     } else if (this.props.product && this.props.product.image3) {
       let src = "data:image/jpg;base64," + this.props.product.image3;
-      image3 = <img src={src} />;
+      image3 = <img src={src} alt="" />;
     }
     let preview = (
       <div className={styleClasses.Preview}>
@@ -243,6 +260,14 @@ class PostProduct extends Component {
         <button className="btn btn-lg btn-primary btn-block" type="submit">
           Continue
         </button>
+        {this.props.update ? (
+          <button
+            className="btn btn-sm btn-danger btn-block"
+            type="submit"
+            onClick={this.props.goBack}>
+            Go Back
+          </button>
+        ) : null}
       </React.Fragment>
     );
 
