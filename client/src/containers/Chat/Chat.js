@@ -15,6 +15,7 @@ class Chat extends Component {
     messages: [],
     peoples: [],
     peoplesLoaded: false,
+    sendMesaageDisabled: false,
   };
 
   componentDidMount = () => {
@@ -91,18 +92,29 @@ class Chat extends Component {
       });
   };
 
-  socketSendMessage = () => {
+  socketSendMessage = (event) => {
+    event.preventDefault();
+    const message = this.state.messageInput;
+    if (message.length === 0) {
+      return;
+    }
     let details = {
       room: this.state.room,
       username: this.props.username,
       userId: this.props.userId,
     };
-    const message = this.state.messageInput;
-    socket.emit("sendMessage", details, message, (error) => {
-      console.log("message is delivered");
-    });
     this.setState({
-      messageInput: "",
+      sendMesaageDisabled: true
+    })
+    socket.emit("sendMessage", details, message, (error) => {
+      this.setState({
+        messageInput: "",
+        sendMesaageDisabled: false
+      });
+      if (error) {
+        console.log(error)
+      }
+      console.log("message is delivered");
     });
   };
 
@@ -113,15 +125,16 @@ class Chat extends Component {
   };
 
   changeChannel = (channelId, name) => {
-    // console.log(channelId);
-    this.setState({
-      room: channelId,
-      currentName: name,
-      messages: [],
-      messageInput: "",
-    });
-    if (channelId !== null) {
-      this.socketJoin(channelId);
+    if (String(this.state.room) !== String(channelId)) {
+      this.setState({
+        room: channelId,
+        currentName: name,
+        messages: [],
+        messageInput: "",
+      });
+      if (channelId !== null) {
+        this.socketJoin(channelId);
+      }
     }
   };
 
@@ -143,38 +156,39 @@ class Chat extends Component {
               </p>
             </div>
           ) : (
-            <div className={styleClasses.Message}>
-              <div className={inboxClassName.join(" ")}>
-                <Inbox
-                  changeChannel={this.changeChannel}
-                  peoples={this.state.peoples}
-                  room={this.state.room}
-                />
-              </div>
-              <div className={messageBoxClassName.join(" ")}>
-                {this.state.room ? (
-                  <Messages
-                    userId={this.props.userId}
-                    messages={this.state.messages}
-                    currentName={this.state.currentName}
-                    goBack={this.changeChannel}
+              <div className={styleClasses.Message}>
+                <div className={inboxClassName.join(" ")}>
+                  <Inbox
+                    changeChannel={this.changeChannel}
+                    peoples={this.state.peoples}
+                    room={this.state.room}
                   />
-                ) : (
-                  <div className={styleClasses.Message_Empty}>
-                    <i className="fa fa-comments fa-3x" aria-hidden="true"></i>
-                    <b>Tap a chat to view messages.</b>
-                  </div>
-                )}
-                {this.state.room ? (
-                  <InputMessage
-                    value={this.state.messageInput}
-                    changed={this.inputChangeHandler}
-                    onSend={this.socketSendMessage}
-                  />
-                ) : null}
+                </div>
+                <div className={messageBoxClassName.join(" ")}>
+                  {this.state.room ? (
+                    <Messages
+                      userId={this.props.userId}
+                      messages={this.state.messages}
+                      currentName={this.state.currentName}
+                      goBack={this.changeChannel}
+                    />
+                  ) : (
+                      <div className={styleClasses.Message_Empty}>
+                        <i className="fa fa-comments fa-3x" aria-hidden="true"></i>
+                        <b>Tap a chat to view messages.</b>
+                      </div>
+                    )}
+                  {this.state.room ? (
+                    <InputMessage
+                      value={this.state.messageInput}
+                      changed={this.inputChangeHandler}
+                      onSend={this.socketSendMessage}
+                      sendMesaageDisabled={this.state.sendMesaageDisabled}
+                    />
+                  ) : null}
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </React.Fragment>
     );
