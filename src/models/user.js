@@ -35,13 +35,13 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    // chatWith: [
-    //   {
-    //     name: String,
-    //     id: mongoose.Schema.Types.ObjectId,
-    //     channelId: mongoose.Schema.Types.ObjectId,
-    //   },
-    // ],
+    chatWith: [
+      {
+        name: String,
+        id: mongoose.Schema.Types.ObjectId,
+        channelId: mongoose.Schema.Types.ObjectId,
+      },
+    ],
     tokens: [
       {
         token: {

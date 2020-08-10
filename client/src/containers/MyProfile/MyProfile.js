@@ -116,7 +116,7 @@ class MyProfile extends Component {
         <div>
           <button
             type="button"
-            class="btn btn-primary btn-lg btn-block"
+            className="btn btn-primary btn-lg btn-block"
             onClick={this.toggleChangePasswordState}>
             Want To Change Password?
           </button>

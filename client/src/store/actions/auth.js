@@ -61,18 +61,18 @@ export const authOtp = (webmail, otp) => {
     axios
       .post("/api/user/checkOTP", data)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("_id", response.data.user._id);
         localStorage.setItem("webmail", response.data.user.webmail);
         localStorage.setItem("name", response.data.user.name);
-        console.log(response.data);
+        // console.log(response.data);
         dispatch(authSuccess(response.data));
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
         dispatch(authFail(error.response.data.error, error.response.status));
-        console.log(error.response);
+        // console.log(error.response);
       });
   };
 };
@@ -87,23 +87,23 @@ export const authLogin = (webmail, password) => {
     axios
       .post("/api/user/login", authData)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         if (response.data.doVerify) {
           dispatch(getVerified());
         } else {
-          console.log(response);
+          // console.log(response);
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("_id", response.data.user._id);
           localStorage.setItem("webmail", response.data.user.webmail);
           localStorage.setItem("name", response.data.user.name);
-          console.log(response.data);
+          // console.log(response.data);
           dispatch(authSuccess(response.data));
         }
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
         dispatch(authFail(error.response.data.error, error.response.status));
-        console.log(error.response);
+        // console.log(error.response);
       });
   };
 };
@@ -129,9 +129,9 @@ export const authSignup = (webmail, password, name) => {
         dispatch(getVerified());
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
         dispatch(authFail(error.response.data.error, error.response.status));
-        console.log(error.response);
+        // console.log(error.response);
       });
   };
 };

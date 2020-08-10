@@ -3,7 +3,7 @@ const Message = require("../models/message");
 const User = require("../models/user");
 const express = require("express");
 const auth = require("../middleware/auth");
-const { response } = require("express");
+const Product = require("../models/product");
 
 const router = new express.Router();
 
@@ -18,6 +18,7 @@ router.post("/channel/create", auth, async (req, res) => {
     if (!seller) {
       throw new Error("Unable To Find Seller");
     }
+
     // let channelAlreadyExists = await Channel.find({
     //   "between.id": req.user._id,
     //   "between.id": req.body.sellerId,
@@ -28,19 +29,22 @@ router.post("/channel/create", auth, async (req, res) => {
     // }
 
     // let channelId;
-    // let alreadyChatting = req.user.chatWith.find((element) => {
-    //   if (String(element.id) === String(seller._id)) {
-    //     channelId = element.channelId;
-    //   }
-    //   return String(element.id) === String(seller._id);
-    // });
+    let alreadyChatting = req.user.chatWith.find((element) => {
+      // if (String(element.id) === String(seller._id)) {
+      //   channelId = element.channelId;
+      // }
+      return String(element.id) === String(seller._id);
+    });
     // if (req.user.chatWith.length === 0) {
     //   alreadyChatting = false;
     // }
-    // if (alreadyChatting) {
-    //   let channel = await Channel.findById(channelId).lean();
-    //   return res.json({ channel });
-    // }
+    console.log(alreadyChatting);
+    if (alreadyChatting) {
+      // let channel = await Channel.findById(channelId).lean();
+      let channel = await Channel.findById(alreadyChatting.channelId);
+      console.log(channel);
+      return res.json({ channel });
+    }
     let channel = new Channel({
       between: [
         {
@@ -53,20 +57,20 @@ router.post("/channel/create", auth, async (req, res) => {
         },
       ],
     });
-    // seller.chatWith.unshift({
-    //   name: req.user.name,
-    //   id: req.user._id,
-    //   channelId: channel._id,
-    // });
-    // req.user.chatWith.unshift({
-    //   name: seller.name,
-    //   id: seller._id,
-    //   channelId: channel._id,
-    // });
     await channel.save();
-    // await req.user.save();
-    // await seller.save();
     res.json({ channel });
+    seller.chatWith.unshift({
+      name: req.user.name,
+      id: req.user._id,
+      channelId: channel._id,
+    });
+    req.user.chatWith.unshift({
+      name: seller.name,
+      id: seller._id,
+      channelId: channel._id,
+    });
+    await req.user.save();
+    await seller.save();
   } catch (err) {
     console.log(err);
     res.status(400).json({ error: "unable to create the channel" });

@@ -2,6 +2,18 @@ const mongoose = require("mongoose");
 
 const channelSchema = new mongoose.Schema(
   {
+    // owner1: {
+    //   //one who started
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   required: true,
+    //   ref: "user",
+    // },
+    // owner2: {
+    //   //one who was selling
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   required: true,
+    //   ref: "user",
+    // },
     between: [
       {
         id: mongoose.Schema.Types.ObjectId,

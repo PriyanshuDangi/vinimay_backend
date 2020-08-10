@@ -127,6 +127,7 @@ class Product extends Component {
         "/api/chat/channel/create/",
         {
           sellerId: this.state.product.owner,
+          productId: this.state.product._id,
         },
         {
           headers: {
