@@ -10,13 +10,16 @@ const auth = async (req, res, next) => {
       "tokens.token": token,
     });
     if (!user) {
-      throw new Error();
+      throw new Error("please authenticate");
+    }
+    if (!user.verified) {
+      throw new Error("Please verify your account");
     }
     req.token = token;
     req.user = user;
     next();
   } catch (err) {
-    res.status(401).send({ error: "please authenticate" });
+    res.status(401).send({ error: err.message });
   }
 };
 
