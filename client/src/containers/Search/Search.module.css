@@ -12,3 +12,55 @@
 .No_Product p {
   margin: 1px;
 }
+.Top {
+  display: flex;
+  padding: 5px 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+.TopBorder {
+  border-bottom: 1px solid #aaaaaa;
+  width: 98%;
+  margin: auto;
+}
+.SortBy {
+  position: relative;
+  /* width: 200px; */
+}
+.SortByDetails {
+  display: flex;
+  justify-content: space-between;
+}
+.SortBy button {
+  background-color: inherit;
+  border: none;
+}
+.SortBy button:active {
+  outline: none;
+}
+.DropDown {
+  width: 100%;
+  z-index: 9;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  margin-top: 10px;
+  background-color: white;
+}
+.DropDown li {
+  height: 30px;
+  font-size: 18px;
+  list-style: none;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 575px) {
+  .StringName {
+    display: none;
+  }
+  .Top {
+    justify-content: flex-end;
+  }
+}

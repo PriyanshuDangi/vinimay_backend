@@ -42,6 +42,10 @@ const userSchema = new mongoose.Schema(
         channelId: mongoose.Schema.Types.ObjectId,
       },
     ],
+    newMessageCount: {
+      type: Number,
+      default: null,
+    },
     tokens: [
       {
         token: {

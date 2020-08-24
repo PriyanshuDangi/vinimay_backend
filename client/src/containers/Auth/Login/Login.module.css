@@ -2,7 +2,7 @@
   min-height: 100vh;
   padding-top: 40px;
   padding-bottom: 40px;
-  margin-bottom: 40px;
+  /* margin-bottom: 40px; */
   /* background-color: #f5f5f5; */
   box-sizing: border-box;
 }
@@ -12,10 +12,34 @@
   width: 90%;
   margin: auto;
   padding: 20px 30px 10px;
-  box-shadow: 0 2px 3px #333333;
+  box-shadow: 0 2px 3px #333333, 0 -5px 3px #eee;
   background-color: white;
+  border-radius: 10px;
+  position: relative;
 }
 
 .Login button:first-child {
   margin-bottom: 30px;
+}
+
+.Button button {
+  border-radius: 10px;
+}
+
+/*otp*/
+.closeButtonOTP {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  background: white;
+  border: none;
+  font-size: 28px;
+  color: #777777;
+}
+.closeButtonOTP:hover {
+  color: black;
+  border: none;
+}
+.closeButtonOTP:focus {
+  outline: none;
 }

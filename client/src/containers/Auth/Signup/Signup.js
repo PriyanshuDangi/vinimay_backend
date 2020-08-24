@@ -103,9 +103,11 @@ class Signup extends Component {
           <h1 className="h3 mb-3 ">Signup</h1>
         </div>
         {formInput}
-        <button className="btn btn-lg btn-primary btn-block" type="submit">
-          Continue
-        </button>
+        <div className={styleClasses.Button}>
+          <button className="btn btn-lg btn-primary btn-block" type="submit">
+            Continue
+          </button>
+        </div>
         <small className=" text-center form-text text-muted">
           By continuing you agree to the Vinimay's condition of use and Privacy
           Notice.

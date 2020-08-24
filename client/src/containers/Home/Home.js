@@ -114,51 +114,62 @@ class Home extends Component {
             className={styleClasses.Pagination}>
             <ul className="pagination justify-content-center">
               <li className={firstClassName.join(" ")}>
-                <a
-                  className="page-link"
-                  onClick={() => {
-                    this.getProducts(this.state.currentPage - 1);
-                  }}
-                  aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-                </a>
-              </li>
-              <li className={firstClassName.join(" ")}>
-                <a
-                  className="page-link"
+                <button
+                  className="page-link btn btn-link"
+                  type="button"
                   onClick={() => {
                     this.getProducts(this.state.currentPage - 1);
                   }}>
-                  {this.state.currentPage - 1}
-                </a>
+                  <span aria-hidden="true">&laquo;</span>
+                </button>
+              </li>
+              <li className={firstClassName.join(" ")}>
+                <button
+                  className="page-link btn btn-link"
+                  type="button"
+                  onClick={() => {
+                    this.getProducts(this.state.currentPage - 1);
+                  }}>
+                  <span aria-hidden="true">{this.state.currentPage - 1}</span>
+                </button>
               </li>
               <li className="page-item active">
-                <a
-                  className="page-link "
+                <button
+                  className="page-link btn btn-link"
+                  type="button"
                   onClick={() => {
                     this.getProducts(this.state.currentPage);
                   }}>
-                  {this.state.currentPage}
-                </a>
+                  <span aria-hidden="true">{this.state.currentPage}</span>
+                </button>
               </li>
               <li className={lastClassName.join(" ")}>
-                <a
-                  className="page-link"
+                <button
+                  className="page-link btn btn-link"
+                  type="button"
                   onClick={() => {
                     this.getProducts(this.state.currentPage + 1);
                   }}>
-                  {this.state.currentPage + 1}
-                </a>
+                  <span aria-hidden="true">{this.state.currentPage + 1}</span>
+                </button>
               </li>
               <li className={lastClassName.join(" ")}>
-                <a
+                {/* <a
                   className="page-link"
                   onClick={() => {
                     this.getProducts(this.state.currentPage + 1);
                   }}
                   aria-label="Next">
                   <span aria-hidden="true">&raquo;</span>
-                </a>
+                </a> */}
+                <button
+                  className="page-link btn btn-link"
+                  type="button"
+                  onClick={() => {
+                    this.getProducts(this.state.currentPage + 1);
+                  }}>
+                  <span aria-hidden="true">&raquo;</span>
+                </button>
               </li>
             </ul>
           </nav>

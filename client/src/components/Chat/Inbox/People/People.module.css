@@ -4,6 +4,9 @@
   padding: 18px 16px 10px;
   cursor: pointer;
 }
+.People_List:hover {
+  background: #d6caca;
+}
 .Active_List {
   background: #d6caca;
 }

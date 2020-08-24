@@ -27,7 +27,11 @@ export default function Navbar(props) {
         </nav>
       </header>
       <div className={styleClasses.SearchBottom}>
-        <Search />
+        <Search
+          onSearchInputChange={props.onSearchInputChange}
+          searchInput={props.searchInput}
+          onSearch={props.onSearch}
+        />
       </div>
     </div>
   );

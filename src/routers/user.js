@@ -1,7 +1,7 @@
 const express = require("express");
 const User = require("../models/user");
 const auth = require("../middleware/auth");
-const sendOTP = require("../email/otp");
+const { sendOTP } = require("../email/otp");
 
 const router = new express.Router();
 
@@ -82,6 +82,7 @@ router.post("/login", async (req, res) => {
         _id: user._id,
         name: user.name,
         webmail: user.webmail,
+        newMessageCount: user.newMessageCount,
       },
     });
   } catch (err) {
@@ -119,6 +120,7 @@ router.post("/checkOTP", async (req, res) => {
         _id: user._id,
         name: user.name,
         webmail: user.webmail,
+        newMessageCount: user.newMessageCount,
       },
     });
   } catch (err) {
@@ -188,6 +190,7 @@ router.get("/checkToken", auth, (req, res) => {
       _id: req.user._id,
       name: req.user.name,
       webmail: req.user.webmail,
+      newMessageCount: req.user.newMessageCount,
     },
   });
 });

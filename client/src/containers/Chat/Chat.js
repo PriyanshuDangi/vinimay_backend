@@ -1,16 +1,18 @@
 import React, { Component } from "react";
 import styleClasses from "./Chat.module.css";
-import socket from "./Socket";
+import io from "./Socket";
 import { connect } from "react-redux";
 import Inbox from "../../components/Chat/Inbox/Inbox";
 import Messages from "../../components/Chat/Messages/Messages";
 import InputMessage from "../../components/Chat/InputMessage/InputMessage";
+import * as actionCreators from "../../store/actions/index";
 import axios from "axios";
-
+let socket;
 class Chat extends Component {
   state = {
     room: null,
     currentName: null,
+    currentCount: null,
     messageInput: "",
     messages: [],
     peoples: [],
@@ -19,11 +21,25 @@ class Chat extends Component {
   };
 
   componentDidMount = () => {
+    socket = io();
     socket.on("message", (message) => {
-      this.setState((prevState) => {
-        return { messages: prevState.messages.concat(message) };
-      });
-      // console.log(message);
+      if (String(message.room) === String(this.state.room)) {
+        this.setState((prevState) => {
+          return { messages: prevState.messages.concat(message) };
+        });
+        this.props.decreaseCount(1);
+        axios.post(
+          "/api/chat/messageReadWhileOn",
+          {
+            channelId: message.room,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + this.props.token,
+            },
+          }
+        );
+      }
     });
     if (this.props.location.state && this.props.location.state.channelId) {
       let room = this.props.location.state.channelId;
@@ -50,11 +66,28 @@ class Chat extends Component {
       });
   };
 
-  // componentDidUpdate = (prevProps, prevState, snapshot) => {
-  //   if (this.state.room !== prevState.room && prevState.room) {
-  //     this.socketJoin(this.state.room);
-  //   }
-  // };
+  componentDidUpdate = (prevProps, prevState, snapshot) => {
+    if (this.props.newMessageCount > prevProps.newMessageCount) {
+      if (
+        String(this.state.room) !== String(this.props.newMessageDetails.room)
+      ) {
+        console.log(prevProps.newMessageCount, "hey");
+        let peoples = prevState.peoples.map((pep) => {
+          if (
+            String(pep.channelId) === String(this.props.newMessageDetails.room)
+          ) {
+            pep.newMessagesRecieved = pep.newMessagesRecieved + 1;
+            pep.lastMessage = this.props.newMessageDetails.message;
+          }
+          return pep;
+        });
+        console.log(peoples);
+        this.setState({
+          peoples,
+        });
+      }
+    }
+  };
 
   socketJoin = (room) => {
     let details = {
@@ -80,7 +113,7 @@ class Chat extends Component {
         }
       )
       .then((response) => {
-        // console.log(response);
+        console.log(response);
         this.setState((prevState) => {
           return {
             messages: response.data.messages.concat(prevState.messages),
@@ -104,15 +137,16 @@ class Chat extends Component {
       userId: this.props.userId,
     };
     this.setState({
-      sendMesaageDisabled: true
-    })
+      sendMesaageDisabled: true,
+    });
     socket.emit("sendMessage", details, message, (error) => {
       this.setState({
         messageInput: "",
-        sendMesaageDisabled: false
+        sendMesaageDisabled: false,
       });
+
       if (error) {
-        console.log(error)
+        console.log(error);
       }
       console.log("message is delivered");
     });
@@ -124,14 +158,27 @@ class Chat extends Component {
     });
   };
 
-  changeChannel = (channelId, name) => {
+  changeChannel = (channelId, name, count) => {
     if (String(this.state.room) !== String(channelId)) {
-      this.setState({
-        room: channelId,
-        currentName: name,
-        messages: [],
-        messageInput: "",
+      this.setState((prevState) => {
+        let peoples = prevState.peoples.map((pep) => {
+          if (String(pep.channelId) === String(channelId)) {
+            pep.newMessagesRecieved = 0;
+          }
+          return pep;
+        });
+        return {
+          room: channelId,
+          currentName: name,
+          currentCount: count,
+          messages: [],
+          messageInput: "",
+          peoples,
+        };
       });
+      if (count > 0) {
+        this.props.decreaseCount(count);
+      }
       if (channelId !== null) {
         this.socketJoin(channelId);
       }
@@ -156,39 +203,39 @@ class Chat extends Component {
               </p>
             </div>
           ) : (
-              <div className={styleClasses.Message}>
-                <div className={inboxClassName.join(" ")}>
-                  <Inbox
-                    changeChannel={this.changeChannel}
-                    peoples={this.state.peoples}
-                    room={this.state.room}
-                  />
-                </div>
-                <div className={messageBoxClassName.join(" ")}>
-                  {this.state.room ? (
-                    <Messages
-                      userId={this.props.userId}
-                      messages={this.state.messages}
-                      currentName={this.state.currentName}
-                      goBack={this.changeChannel}
-                    />
-                  ) : (
-                      <div className={styleClasses.Message_Empty}>
-                        <i className="fa fa-comments fa-3x" aria-hidden="true"></i>
-                        <b>Tap a chat to view messages.</b>
-                      </div>
-                    )}
-                  {this.state.room ? (
-                    <InputMessage
-                      value={this.state.messageInput}
-                      changed={this.inputChangeHandler}
-                      onSend={this.socketSendMessage}
-                      sendMesaageDisabled={this.state.sendMesaageDisabled}
-                    />
-                  ) : null}
-                </div>
+            <div className={styleClasses.Message}>
+              <div className={inboxClassName.join(" ")}>
+                <Inbox
+                  changeChannel={this.changeChannel}
+                  peoples={this.state.peoples}
+                  room={this.state.room}
+                />
               </div>
-            )}
+              <div className={messageBoxClassName.join(" ")}>
+                {this.state.room ? (
+                  <Messages
+                    userId={this.props.userId}
+                    messages={this.state.messages}
+                    currentName={this.state.currentName}
+                    goBack={this.changeChannel}
+                  />
+                ) : (
+                  <div className={styleClasses.Message_Empty}>
+                    <i className="fa fa-comments fa-3x" aria-hidden="true"></i>
+                    <b>Tap a chat to view messages.</b>
+                  </div>
+                )}
+                {this.state.room ? (
+                  <InputMessage
+                    value={this.state.messageInput}
+                    changed={this.inputChangeHandler}
+                    onSend={this.socketSendMessage}
+                    sendMesaageDisabled={this.state.sendMesaageDisabled}
+                  />
+                ) : null}
+              </div>
+            </div>
+          )}
         </div>
       </React.Fragment>
     );
@@ -200,7 +247,15 @@ const mapStateToProps = (state) => {
     token: state.auth.token,
     username: state.auth.name,
     userId: state.auth.userId,
+    newMessageCount: state.auth.newMessageCount,
+    newMessageDetails: state.auth.newMessageDetails,
   };
 };
 
-export default connect(mapStateToProps)(Chat);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    decreaseCount: (count) => dispatch(actionCreators.decrementCount(count)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Chat);

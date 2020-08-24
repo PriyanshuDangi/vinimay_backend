@@ -25,7 +25,7 @@
   color: white;
 }
 
-@media (max-width: 991px) and (min-width: 600px) {
+@media (max-width: 991px) and (min-width: 576px) {
   .NavbarNavigation span {
     display: none;
   }
@@ -34,7 +34,7 @@
   }
 }
 
-@media (max-width: 599px) {
+@media (max-width: 575px) {
   .NavbarNavigation span {
     display: none;
   }

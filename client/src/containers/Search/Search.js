@@ -5,6 +5,12 @@ import axios from "axios";
 import { connect } from "react-redux";
 import Spinner from "../../components/UI/Spinner/Spinner";
 
+const sortOptions = [
+  { show: "Date Modified", send: "createdAt" },
+  { show: "Price (Low To High)", send: "price-asc" },
+  { show: "Price (High To Low)", send: "price-desc" },
+];
+
 class Search extends Component {
   state = {
     products: [],
@@ -15,6 +21,8 @@ class Search extends Component {
     currentPage: 1,
     totalPage: null,
     string: "",
+    showDropDown: false,
+    sortBy: 0,
   };
 
   componentDidMount = () => {
@@ -30,10 +38,19 @@ class Search extends Component {
     this.sendSearchRequest();
   };
 
-  sendSearchRequest = () => {
+  sendSearchRequest = (option) => {
     var urlParams = new URLSearchParams(this.props.location.search);
+    let link = "api/product/search?string=" + urlParams.get("string");
+    if (option) {
+      var sortBy = sortOptions[option].send;
+      link =
+        "api/product/search?string=" +
+        urlParams.get("string") +
+        "&sortBy=" +
+        sortBy;
+    }
     axios
-      .get("api/product/search?string=" + urlParams.get("string"), {
+      .get(link, {
         headers: {
           Authorization: "Bearer " + this.props.token,
         },
@@ -56,20 +73,83 @@ class Search extends Component {
   };
 
   componentDidUpdate = (prevProps, prevState) => {
-    if (this.state.string !== prevState.string) {
-      this.sendSearchRequest();
-    }
-  };
-
-  render() {
     var urlParams = new URLSearchParams(this.props.location.search);
     if (urlParams.get("string") !== this.state.string) {
       this.setState({
         string: urlParams.get("string"),
+        sortBy: 0,
       });
+      this.sendSearchRequest();
+      console.log("sent");
     }
+  };
+
+  toggleDropDown = () => {
+    this.setState((prevState) => {
+      return {
+        showDropDown: !prevState.showDropDown,
+      };
+    });
+  };
+
+  setSortBy = (option) => {
+    if (option !== this.state.sortBy) {
+      this.setState({
+        sortBy: option,
+      });
+      this.sendSearchRequest(option);
+    }
+    this.toggleDropDown();
+  };
+
+  render() {
+    let dropdown;
+    if (this.state.showDropDown) {
+      dropdown = (
+        <ul className={styleClasses.DropDown}>
+          {sortOptions.map((option, index) => {
+            return (
+              <li
+                key={index}
+                onClick={() => {
+                  this.setSortBy(index);
+                }}>
+                {option.show}
+              </li>
+            );
+          })}
+        </ul>
+      );
+    }
+
     let products = (
       <React.Fragment>
+        <div className={styleClasses.Top}>
+          <div className={styleClasses.StringName}>
+            Showing results for <b>"{this.state.string}"</b>
+          </div>
+          <div className={styleClasses.SortBy}>
+            <div className={styleClasses.SortByDetails}>
+              <div>
+                <b>Sort By : </b>
+              </div>
+              <div>
+                {" "}
+                <span> {sortOptions[this.state.sortBy].show}</span>
+                <button onClick={this.toggleDropDown}>
+                  {this.state.showDropDown ? (
+                    <i className="fa fa-chevron-up" aria-hidden="true"></i>
+                  ) : (
+                    <i className="fa fa-chevron-down" aria-hidden="true"></i>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {dropdown}
+          </div>
+        </div>
+        <div className={styleClasses.TopBorder}></div>
         <Products products={this.state.products} />
       </React.Fragment>
     );

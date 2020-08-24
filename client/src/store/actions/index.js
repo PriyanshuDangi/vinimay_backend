@@ -6,3 +6,5 @@ export {
   authOtp,
   cancelVerification,
 } from "./auth";
+
+export { incrementCount, decrementCount } from "./notification";

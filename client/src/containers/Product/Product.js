@@ -128,6 +128,7 @@ class Product extends Component {
         {
           sellerId: this.state.product.owner,
           productId: this.state.product._id,
+          productTitle: this.state.product.title,
         },
         {
           headers: {

@@ -4,7 +4,7 @@ const User = require("../models/user");
 const express = require("express");
 const auth = require("../middleware/auth");
 const Product = require("../models/product");
-
+const { sendIntrested } = require("../email/otp");
 const router = new express.Router();
 
 /**
@@ -59,6 +59,14 @@ router.post("/channel/create", auth, async (req, res) => {
     });
     await channel.save();
     res.json({ channel });
+
+    sendIntrested(
+      seller.webmail,
+      req.user.name,
+      req.body.productTitle,
+      req.body.productId
+    );
+
     seller.chatWith.unshift({
       name: req.user.name,
       id: req.user._id,
@@ -140,7 +148,9 @@ router.post("/getChat", auth, async (req, res) => {
     let index = channel.between.findIndex((element) => {
       return String(element.id) !== String(req.user._id);
     });
+    req.user.newMessageCount -= channel.between[index].newMessagesRecieved;
     channel.between[index].newMessagesRecieved = 0;
+    await req.user.save();
     await channel.save();
   } catch (err) {
     console.log(err);
@@ -148,6 +158,25 @@ router.post("/getChat", auth, async (req, res) => {
       return res.status(400).send({ error: err.message });
     }
     res.status(500).send({ error: "unable to load the older messages" });
+  }
+});
+
+router.post("/messageReadWhileOn", auth, async (req, res) => {
+  try {
+    const channel = await Channel.findOne({
+      _id: req.body.channelId,
+      "between.id": req.user._id,
+    });
+    let index = channel.between.findIndex((element) => {
+      return String(element.id) !== String(req.user._id);
+    });
+    console.log(channel.between[index].newMessagesRecieved);
+    req.user.newMessageCount -= channel.between[index].newMessagesRecieved;
+    channel.between[index].newMessagesRecieved = 0;
+    await req.user.save();
+    await channel.save();
+  } catch (err) {
+    console.log(err);
   }
 });
 

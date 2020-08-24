@@ -4,6 +4,7 @@ import styleClasses from "./MyProducts.module.css";
 import Axios from "axios";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import Products from "../../components/Products/Products";
+import { NavLink } from "react-router-dom";
 
 class MyProducts extends Component {
   state = {
@@ -39,10 +40,43 @@ class MyProducts extends Component {
       content = <Spinner />;
     }
     if (Object.entries(this.state.products).length !== 0) {
-      content = <Products products={this.state.products} />;
+      content = (
+        <div>
+          <div className={styleClasses.Heading}>
+            <h1>My Products</h1>
+          </div>
+          <div>
+            <Products products={this.state.products} />
+          </div>
+        </div>
+      );
+    }
+    if (
+      !this.state.loading &&
+      !this.state.error &&
+      Object.entries(this.state.products).length === 0
+    ) {
+      content = (
+        <div className={styleClasses.Error}>
+          <div>
+            <b>Please post some products to sell</b>
+          </div>
+          <div>
+            <NavLink to="/post">
+              <div className={styleClasses.Sell}>
+                <i className="fa fa-camera" aria-hidden="true"></i> SELL
+              </div>
+            </NavLink>
+          </div>
+        </div>
+      );
     }
     if (this.state.error) {
-      content = <p>Unable to get products</p>;
+      content = (
+        <div className={styleClasses.Error}>
+          <b>Unable to get products</b>
+        </div>
+      );
     }
     return <div className={styleClasses.Main}>{content}</div>;
   }

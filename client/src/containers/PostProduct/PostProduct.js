@@ -95,7 +95,10 @@ class PostProduct extends Component {
         ...this.state.controls,
       };
       // console.log(this.props.product);
-      for (const [key, value] of Object.entries(controls)) {
+      // for (const [key, value] of Object.entries(controls)) {
+      //   controls[key].value = this.props.product[key];
+      // }
+      for (const key of Object.keys(controls)) {
         controls[key].value = this.props.product[key];
       }
       this.setState({

@@ -65,6 +65,9 @@
   .Product {
     flex-direction: row;
   }
+  .Carousel {
+    margin: 0;
+  }
   .Carousel img {
     max-height: 400px;
   }

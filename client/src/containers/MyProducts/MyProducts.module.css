@@ -1,0 +1,30 @@
+.Heading {
+  text-align: center;
+  font-weight: bold;
+  padding: 20px 0;
+  margin: auto;
+}
+.Error {
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+}
+.Error > div {
+  margin: 5px;
+}
+.Error b {
+  font-size: 20px;
+}
+.Sell {
+  padding: 4px 10px;
+  color: #ffffff;
+  background-color: #2a65ea;
+  border-radius: 10px;
+  font-size: 24px;
+}
+.Sell a {
+  text-decoration: none;
+}

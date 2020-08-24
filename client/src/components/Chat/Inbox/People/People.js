@@ -17,7 +17,8 @@ export default function People(props) {
         onClick={props.changeChannel.bind(
           this,
           props.people.channelId,
-          props.people.name
+          props.people.name,
+          props.people.newMessagesRecieved
         )}>
         <div className={styleClasses.People_Info}>
           <div className={styleClasses.People_Img}>

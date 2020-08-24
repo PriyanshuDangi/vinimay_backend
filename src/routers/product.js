@@ -150,6 +150,7 @@ router.get("/readAll", auth, async (req, res) => {
     const products = await Product.find()
       .limit(parseInt(req.query.limit))
       .skip(parseInt(req.query.skip))
+      .sort({ createdAt: -1 })
       .lean();
     if (!products) {
       throw new Error("No Product Found");
@@ -170,7 +171,9 @@ router.get("/readAll", auth, async (req, res) => {
  */
 router.get("/myproducts", auth, async (req, res) => {
   try {
-    const products = await Product.find({ owner: req.user._id }).lean();
+    const products = await Product.find({ owner: req.user._id })
+      .sort({ createdAt: -1 })
+      .lean();
     if (!products) {
       throw new Error("No Product Found");
     }
@@ -188,13 +191,27 @@ router.get("/myproducts", auth, async (req, res) => {
  */
 router.get("/search", auth, async (req, res) => {
   try {
-    var allProducts = await Product.find().lean();
+    let allProducts;
+    if (req.query.sortBy) {
+      console.log(req.query.sortBy);
+      if (req.query.sortBy.includes("price")) {
+        let sortquery = req.query.sortBy.split("-");
+        if (sortquery[1] === "desc") {
+          allProducts = await Product.find().sort({ price: -1 }).lean();
+        } else {
+          allProducts = await Product.find().sort({ price: 1 }).lean();
+        }
+      }
+    } else {
+      allProducts = await Product.find().sort({ createdAt: -1 }).lean();
+    }
+
     let products;
     if (req.query.string === undefined) {
       products = allProducts;
     } else {
       products = allProducts.filter((product) => {
-        const regex = new RegExp(`^${req.query.string}`, "gi");
+        const regex = new RegExp(`${req.query.string}`, "gi");
         return product.title.match(regex);
       });
     }

@@ -18,6 +18,9 @@ import Chat from "./containers/Chat/Chat";
 import ContactUs from "./components/ContactUs/ContactUs";
 import Search from "./containers/Search/Search";
 import MyProfile from "./containers/MyProfile/MyProfile";
+// import Spinner from "./components/UI/Spinner/Spinner";
+
+// const Chat = React.lazy(() => import("./containers/Chat/Chat"));
 
 class App extends Component {
   componentDidMount = () => {
@@ -51,6 +54,20 @@ class App extends Component {
             <Route path="/search" component={Search} />
             <Route path="/myproducts" component={MyProducts} />
             <Route path="/chat" component={Chat} />
+            {/* <Route
+              path="/chat"
+              render={() => (
+                <Suspense
+                  fallback={
+                    <div>
+                      <Spinner />
+                    </div>
+                  }>
+                  <Chat />
+                </Suspense>
+              )}
+            /> */}
+
             <Route path="/contactus" component={ContactUs} />
             <Route exact path="/" component={Home} />
             <Redirect to="/" />

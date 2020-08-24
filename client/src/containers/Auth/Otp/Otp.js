@@ -88,6 +88,12 @@ class Otp extends Component {
       <form onSubmit={this.submitHandler}>
         {error}
         {message}
+        <button
+          type="button"
+          className={styleClasses.closeButtonOTP}
+          onClick={this.props.goBack}>
+          &times;
+        </button>
         <div className="alert alert-light" role="alert">
           Please Verify.
           <br></br>Otp is sent to your registered webmail id.
@@ -110,12 +116,12 @@ class Otp extends Component {
             </button>
           </div>
           <div>
-            <button
+            {/* <button
               type="button"
               className="btn btn-danger"
               onClick={this.props.goBack}>
               Go Back
-            </button>
+            </button> */}
           </div>
         </div>
         {resendButton}

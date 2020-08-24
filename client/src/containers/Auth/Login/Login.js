@@ -93,9 +93,11 @@ class Login extends Component {
           <h1 className="h3 mb-3 ">Login</h1>
         </div>
         {formInput}
-        <button className="btn btn-lg btn-primary btn-block" type="submit">
-          Continue
-        </button>
+        <div className={styleClasses.Button}>
+          <button className="btn btn-lg btn-primary btn-block" type="submit">
+            Continue
+          </button>
+        </div>
         <hr />
         <p className=" text-center form-text text-muted">
           New To Vinimay

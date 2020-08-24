@@ -170,9 +170,20 @@ export const authCheckState = () => {
               user: { ...response.data.user },
             };
             dispatch(authSuccess(data));
+            // console.log(response.data.user);
           })
-          .catch(() => {
-            dispatch(logout());
+          .catch((error) => {
+            if (error.response.status === 401) {
+              localStorage.removeItem("token");
+              localStorage.removeItem("webmail");
+              localStorage.removeItem("name");
+              localStorage.removeItem("_id");
+              dispatch({
+                type: actionTypes.CHECK_TOKEN_FAIL,
+                error: error.response.data.error,
+                errorStatus: error.response.status,
+              });
+            }
           });
       } else {
         dispatch(logout());
